@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/util/constants.dart';
 
 class TodoPage extends StatefulWidget {
   TodoPage({Key? key, required this.title}) : super(key: key);
@@ -17,7 +18,9 @@ class _TodoPageState extends State<TodoPage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Container(),
+        child: Container(
+          child: Text(Constants.param1),
+        ),
       ),
     );
   }
