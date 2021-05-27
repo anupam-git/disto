@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="pack.anupam-git.disto">
+    package="pack.anupam_git.disto">
    <application
         android:label="Disto"
         android:icon="@mipmap/ic_launcher">
