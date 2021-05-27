@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/util/constants.dart';
+import 'package:disto/util/constants.dart';
 
 class TodoPage extends StatefulWidget {
   @override

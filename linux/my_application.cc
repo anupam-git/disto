@@ -45,7 +45,7 @@ static void my_application_activate(GApplication* application) {
     gtk_window_set_titlebar(window, GTK_WIDGET(header_bar));
   }
   else {
-    gtk_window_set_title(window, "flutter_sample_todo");
+    gtk_window_set_title(window, "Disto");
   }
 
   gtk_window_set_default_size(window, 1280, 720);
