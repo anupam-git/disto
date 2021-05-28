@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
       title: 'Disto',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'Roboto',
       ),
       home: LoginPage(),
     );
