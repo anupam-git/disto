@@ -44,7 +44,6 @@ class LoginPage extends StatelessWidget {
               child: Text(
                 'Disto',
                 style: const TextStyle(
-                  // fontWeight: FontWeight.bold,
                   fontSize: 100,
                   color: Colors.white,
                 ),
@@ -57,9 +56,10 @@ class LoginPage extends StatelessWidget {
               child: Text(
                 'A Dead Simple TODO list',
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w100,
-                    fontSize: 16),
+                  color: Colors.white,
+                  fontWeight: FontWeight.w100,
+                  fontSize: 16,
+                ),
               ),
             ),
             OutlinedButton(
