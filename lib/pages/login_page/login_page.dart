@@ -8,13 +8,13 @@ class LoginPage extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          color: Color(0xff000000),
+          color: Colors.black,
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
             end: Alignment.topRight,
             colors: <Color>[
-              Color(0xff796fc1),
-              Color(0xff838ae9),
+              Colors.purple.shade600,
+              Colors.indigo.shade600,
             ],
           ),
         ),
@@ -22,11 +22,56 @@ class LoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'A Dead Simple TODO list',
-              style: const TextStyle(
-                color: Color(0xffffffff),
-                fontWeight: FontWeight.normal,
+            Container(
+              margin: EdgeInsets.only(
+                bottom: 24,
+              ),
+              width: 100,
+              height: 100,
+              child: Image(
+                image: AssetImage('assets/logo.png'),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                bottom: 128,
+              ),
+              child: Text(
+                'Disto',
+                style: const TextStyle(
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 100,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(
+                bottom: 128,
+              ),
+              child: Text(
+                'A Dead Simple TODO list',
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w100,
+                    fontSize: 16),
+              ),
+            ),
+            OutlinedButton(
+              onPressed: () => print('Login to Github'),
+              child: Text('Sign In with GitHub'),
+              style: OutlinedButton.styleFrom(
+                primary: Colors.white,
+                side: BorderSide(
+                  color: Colors.white60,
+                  width: 2,
+                ),
+                padding: EdgeInsets.only(
+                  left: 48,
+                  right: 48,
+                  top: 12,
+                  bottom: 12,
+                ),
               ),
             ),
           ],
