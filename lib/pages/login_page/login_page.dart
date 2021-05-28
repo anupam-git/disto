@@ -63,7 +63,9 @@ class LoginPage extends StatelessWidget {
               ),
             ),
             OutlinedButton(
-              onPressed: () => print('Login to Github'),
+              onPressed: () {
+                Navigator.pushNamed(context, '/');
+              },
               child: Text('Sign In with GitHub'),
               style: OutlinedButton.styleFrom(
                 primary: Colors.white,

@@ -1,4 +1,5 @@
 import 'package:disto/pages/login_page/login_page.dart';
+import 'package:disto/pages/todo_page/todo_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,10 +12,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Disto',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.purple,
         fontFamily: 'Roboto',
       ),
-      home: LoginPage(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/': (context) => TodoPage(),
+      },
     );
   }
 }
