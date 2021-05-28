@@ -28,8 +28,13 @@ class LoginPage extends StatelessWidget {
               ),
               width: 100,
               height: 100,
-              child: Image(
-                image: AssetImage('assets/logo.png'),
+              child: Material(
+                elevation: 25,
+                shape: CircleBorder(),
+                clipBehavior: Clip.antiAlias,
+                color: Colors.transparent,
+                shadowColor: Colors.black,
+                child: Image.asset('assets/logo.png'),
               ),
             ),
             Container(
