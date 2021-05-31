@@ -3,9 +3,6 @@ import 'package:disto/pages/todo_page/todo_item_widget.dart';
 import 'package:flutter/material.dart';
 
 class TodoPage extends StatefulWidget {
-  List<TodoItemDTO> data =
-      List.generate(10, (index) => new TodoItemDTO(index.toString(), false));
-
   TodoPage({Key? key}) : super(key: key);
 
   @override
@@ -13,6 +10,20 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
+  late List<TodoItemDTO> data;
+
+  @override
+  void initState() {
+    super.initState();
+
+    data = List.generate(
+      10,
+      (index) => new TodoItemDTO(
+        value: index.toString(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,40 +64,58 @@ class _TodoPageState extends State<TodoPage> {
               ),
               Flexible(
                 child: ListView.builder(
-                  itemCount: widget.data.length + 1,
+                  itemCount: data.length + 1,
                   itemBuilder: (context, index) {
-                    if (index == widget.data.length) {
-                      // All items created. Create a placeholder item for
-                      // new todo
+                    if (index == data.length) {
+                      // All items created. Create a button to add a todo item
 
-                      TodoItemDTO item = new TodoItemDTO('', false);
-
-                      return TodoItemWidget(
-                        item: item,
-                        onFocusChanged: (hasFocus) {
-                          print(hasFocus);
+                      return ListTile(
+                        onTap: () {
+                          setState(() {
+                            data.add(
+                              new TodoItemDTO(),
+                            );
+                          });
                         },
+                        leading: Padding(
+                          padding: EdgeInsets.only(
+                            left: 12,
+                          ),
+                          child: Icon(
+                            Icons.add_circle_outline,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        title: Text(
+                          'Add Item',
+                          style: TextStyle(
+                            color: Colors.white70,
+                          ),
+                        ),
                       );
                     } else {
                       return TodoItemWidget(
-                        item: widget.data[index],
-                        onCheckedChangeHandler: (value) {
+                        item: data[index],
+                        requestFocus: index == data.length - 1,
+                        onCheckedChange: (value) {
                           setState(() {
-                            widget.data[index].isChecked = value!;
+                            data[index].isChecked = value!;
                           });
                         },
-                        onDismissedHandler: (direction) {
+                        onDismissed: (direction) {
                           setState(() {
-                            TodoItemDTO removedItem =
-                                widget.data.removeAt(index);
+                            TodoItemDTO removedItem = data.removeAt(index);
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                duration: Duration(milliseconds: 500),
+                                duration: Duration(seconds: 1),
                                 content: Text(removedItem.value + ' dismissed'),
                               ),
                             );
                           });
+                        },
+                        onTextChanged: (value) {
+                          data[index].value = value;
                         },
                       );
                     }

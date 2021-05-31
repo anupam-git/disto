@@ -1,6 +1,9 @@
 class TodoItemDTO {
-  final String value;
+  String value;
   bool isChecked;
 
-  TodoItemDTO(this.value, this.isChecked);
+  TodoItemDTO({
+    this.value = '',
+    this.isChecked = false,
+  });
 }

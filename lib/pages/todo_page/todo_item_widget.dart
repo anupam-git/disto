@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 
 class TodoItemWidget extends StatelessWidget {
   final TodoItemDTO item;
-  final Function(bool?)? onCheckedChangeHandler;
-  final Function(DismissDirection)? onDismissedHandler;
-  final Function(bool)? onFocusChanged;
+  final Function(bool?)? onCheckedChange;
+  final Function(DismissDirection)? onDismissed;
+  final Function(String)? onTextChanged;
+
+  final bool requestFocus;
 
   TodoItemWidget({
     required this.item,
-    this.onCheckedChangeHandler,
-    this.onDismissedHandler,
-    this.onFocusChanged,
+    this.requestFocus = false,
+    this.onCheckedChange,
+    this.onDismissed,
+    this.onTextChanged,
   });
 
   @override
@@ -19,6 +22,7 @@ class TodoItemWidget extends StatelessWidget {
     final _textController = new TextEditingController(
       text: item.value,
     );
+
     final _textDecoration = new InputDecoration(
       contentPadding: EdgeInsets.zero,
       border: OutlineInputBorder(
@@ -26,12 +30,11 @@ class TodoItemWidget extends StatelessWidget {
       ),
     );
 
-    final _focusNode = new FocusNode();
-    _focusNode.addListener(() {
-      if (onFocusChanged != null) {
-        onFocusChanged!(_focusNode.hasFocus);
-      }
-    });
+    final _textFieldFocusNode = new FocusNode();
+
+    if (requestFocus) {
+      _textFieldFocusNode.requestFocus();
+    }
 
     return Dismissible(
       key: Key(item.value),
@@ -45,8 +48,8 @@ class TodoItemWidget extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        if (onDismissedHandler != null) {
-          onDismissedHandler!(direction);
+        if (onDismissed != null) {
+          onDismissed!(direction);
         }
       },
       child: ListTile(
@@ -54,8 +57,8 @@ class TodoItemWidget extends StatelessWidget {
           height: double.infinity,
           child: Checkbox(
             onChanged: (value) {
-              if (onCheckedChangeHandler != null) {
-                onCheckedChangeHandler!(value);
+              if (onCheckedChange != null) {
+                onCheckedChange!(value);
               }
             },
             value: item.isChecked,
@@ -65,7 +68,12 @@ class TodoItemWidget extends StatelessWidget {
             ? TextField(
                 controller: _textController,
                 decoration: _textDecoration,
-                focusNode: _focusNode,
+                focusNode: _textFieldFocusNode,
+                onChanged: (value) {
+                  if (onTextChanged != null) {
+                    onTextChanged!(value);
+                  }
+                },
                 style: const TextStyle(
                   color: Colors.white,
                 ),
@@ -73,7 +81,12 @@ class TodoItemWidget extends StatelessWidget {
             : TextField(
                 controller: _textController,
                 decoration: _textDecoration,
-                focusNode: _focusNode,
+                focusNode: _textFieldFocusNode,
+                onChanged: (value) {
+                  if (onTextChanged != null) {
+                    onTextChanged!(value);
+                  }
+                },
                 style: const TextStyle(
                   color: Colors.white24,
                   decoration: TextDecoration.lineThrough,
