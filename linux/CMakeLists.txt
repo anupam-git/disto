@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 project(runner LANGUAGES CXX)
 
-set(BINARY_NAME "flutter_sample_todo")
-set(APPLICATION_ID "com.example.flutter_sample_todo")
+set(BINARY_NAME "disto")
+set(APPLICATION_ID "pack.anupam_git.disto")
 
 cmake_policy(SET CMP0063 NEW)
 
