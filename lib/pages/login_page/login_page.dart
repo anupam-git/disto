@@ -1,6 +1,24 @@
+import 'package:disto/pages/login_page/login_status_widget.dart';
+import 'package:disto/util/page_url.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+enum LoginState {
+  NotLoggedIn,
+  LoggingIn,
+  Syncing,
+  SyncComplete,
+}
+
+class LoginPage extends StatefulWidget {
+  LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => new _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  LoginState _loginState = LoginState.NotLoggedIn;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,7 +26,6 @@ class LoginPage extends StatelessWidget {
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.black,
           gradient: LinearGradient(
             begin: Alignment.bottomLeft,
             end: Alignment.topRight,
@@ -23,35 +40,35 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(
-                bottom: 24,
-              ),
-              width: 100,
-              height: 100,
+              width: 128,
+              height: 128,
               child: Material(
                 elevation: 25,
                 shape: CircleBorder(),
                 clipBehavior: Clip.antiAlias,
                 color: Colors.transparent,
                 shadowColor: Colors.black,
-                child: Image.asset('assets/logo.png'),
+                child: Image.asset(
+                  'assets/logo-white.png',
+                  filterQuality: FilterQuality.high,
+                ),
               ),
             ),
             Container(
               margin: EdgeInsets.only(
-                bottom: 128,
+                top: 48,
               ),
               child: Text(
                 'Disto',
                 style: const TextStyle(
-                  fontSize: 100,
+                  fontSize: 78,
                   color: Colors.white,
                 ),
               ),
             ),
             Container(
               margin: EdgeInsets.only(
-                bottom: 128,
+                bottom: 160,
               ),
               child: Text(
                 'A Dead Simple TODO list',
@@ -62,24 +79,17 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            OutlinedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/');
+            LoginStatusWidget(
+              loginState: _loginState,
+              onLoginButtonPressed: () {
+                setState(() {
+                  _loginState = LoginState.LoggingIn;
+                });
+
+                Future.delayed(Duration(seconds: 2), () {
+                  Navigator.pushNamed(context, PageURL.TodoPageURL);
+                });
               },
-              child: Text('Sign In with GitHub'),
-              style: OutlinedButton.styleFrom(
-                primary: Colors.white,
-                side: BorderSide(
-                  color: Colors.white60,
-                  width: 2,
-                ),
-                padding: EdgeInsets.only(
-                  left: 48,
-                  right: 48,
-                  top: 12,
-                  bottom: 12,
-                ),
-              ),
             ),
           ],
         ),
