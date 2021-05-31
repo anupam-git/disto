@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class TodoPage extends StatefulWidget {
   List<TodoItemDTO> data =
-      List.generate(10, (index) => new TodoItemDTO(index.toString(), true));
+      List.generate(10, (index) => new TodoItemDTO(index.toString(), false));
 
   TodoPage({Key? key}) : super(key: key);
 
@@ -53,28 +53,43 @@ class _TodoPageState extends State<TodoPage> {
               ),
               Flexible(
                 child: ListView.builder(
-                  itemCount: widget.data.length,
+                  itemCount: widget.data.length + 1,
                   itemBuilder: (context, index) {
-                    return TodoItemWidget(
-                      item: widget.data[index],
-                      onCheckedChangeHandler: (value) {
-                        setState(() {
-                          widget.data[index].isChecked = value!;
-                        });
-                      },
-                      onDismissedHandler: (direction) {
-                        setState(() {
-                          TodoItemDTO removedItem = widget.data.removeAt(index);
+                    if (index == widget.data.length) {
+                      // All items created. Create a placeholder item for
+                      // new todo
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              duration: Duration(milliseconds: 500),
-                              content: Text(removedItem.value + ' dismissed'),
-                            ),
-                          );
-                        });
-                      },
-                    );
+                      TodoItemDTO item = new TodoItemDTO('', false);
+
+                      return TodoItemWidget(
+                        item: item,
+                        onFocusChanged: (hasFocus) {
+                          print(hasFocus);
+                        },
+                      );
+                    } else {
+                      return TodoItemWidget(
+                        item: widget.data[index],
+                        onCheckedChangeHandler: (value) {
+                          setState(() {
+                            widget.data[index].isChecked = value!;
+                          });
+                        },
+                        onDismissedHandler: (direction) {
+                          setState(() {
+                            TodoItemDTO removedItem =
+                                widget.data.removeAt(index);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                duration: Duration(milliseconds: 500),
+                                content: Text(removedItem.value + ' dismissed'),
+                              ),
+                            );
+                          });
+                        },
+                      );
+                    }
                   },
                 ),
               ),
