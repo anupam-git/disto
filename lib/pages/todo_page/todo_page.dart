@@ -10,7 +10,7 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  late List<TodoItemDTO> data;
+  late final List<TodoItemDTO> data;
 
   @override
   void initState() {
@@ -64,7 +64,9 @@ class _TodoPageState extends State<TodoPage> {
               ),
               Flexible(
                 child: ListView.builder(
+                  // itemCount is 1 more than length to render the "Add Item" at bottom
                   itemCount: data.length + 1,
+
                   itemBuilder: (context, index) {
                     if (index == data.length) {
                       // All items created. Create a button to add a todo item
@@ -73,7 +75,7 @@ class _TodoPageState extends State<TodoPage> {
                         onTap: () {
                           setState(() {
                             data.add(
-                              new TodoItemDTO(),
+                              new TodoItemDTO(requestFocus: true),
                             );
                           });
                         },
@@ -95,16 +97,17 @@ class _TodoPageState extends State<TodoPage> {
                       );
                     } else {
                       return TodoItemWidget(
+                        key: UniqueKey(),
                         item: data[index],
-                        requestFocus: index == data.length - 1,
-                        onCheckedChange: (value) {
-                          setState(() {
-                            data[index].isChecked = value!;
-                          });
-                        },
                         onDismissed: (direction) {
+                          debugPrint(
+                            'onDismissed: $index -> ${data[index].value}',
+                          );
+
                           setState(() {
                             TodoItemDTO removedItem = data.removeAt(index);
+
+                            debugPrint(data.toString());
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -113,9 +116,6 @@ class _TodoPageState extends State<TodoPage> {
                               ),
                             );
                           });
-                        },
-                        onTextChanged: (value) {
-                          data[index].value = value;
                         },
                       );
                     }

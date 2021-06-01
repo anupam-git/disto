@@ -1,43 +1,52 @@
 import 'package:disto/pages/todo_page/todo_item_dto.dart';
 import 'package:flutter/material.dart';
 
-class TodoItemWidget extends StatelessWidget {
+class TodoItemWidget extends StatefulWidget {
   final TodoItemDTO item;
-  final Function(bool?)? onCheckedChange;
   final Function(DismissDirection)? onDismissed;
-  final Function(String)? onTextChanged;
-
-  final bool requestFocus;
 
   TodoItemWidget({
+    Key? key,
     required this.item,
-    this.requestFocus = false,
-    this.onCheckedChange,
     this.onDismissed,
-    this.onTextChanged,
-  });
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final _textController = new TextEditingController(
-      text: item.value,
+  _TodoItemWidgetState createState() => new _TodoItemWidgetState();
+}
+
+class _TodoItemWidgetState extends State<TodoItemWidget> {
+  late final _textFieldFocusNode;
+  late final _textController;
+  late final _textDecoration;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _textFieldFocusNode = new FocusNode();
+
+    _textController = new TextEditingController(
+      text: widget.item.value,
     );
 
-    final _textDecoration = new InputDecoration(
+    _textDecoration = new InputDecoration(
       contentPadding: EdgeInsets.zero,
       border: OutlineInputBorder(
         borderSide: BorderSide.none,
       ),
     );
+  }
 
-    final _textFieldFocusNode = new FocusNode();
-
-    if (requestFocus) {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.item.requestFocus) {
       _textFieldFocusNode.requestFocus();
+      widget.item.requestFocus = false;
     }
 
     return Dismissible(
-      key: Key(item.value),
+      key: Key(widget.item.value),
       background: Container(
         color: Colors.red,
         padding: EdgeInsets.only(left: 20),
@@ -48,8 +57,8 @@ class TodoItemWidget extends StatelessWidget {
         ),
       ),
       onDismissed: (direction) {
-        if (onDismissed != null) {
-          onDismissed!(direction);
+        if (widget.onDismissed != null) {
+          widget.onDismissed!(direction);
         }
       },
       child: ListTile(
@@ -57,22 +66,20 @@ class TodoItemWidget extends StatelessWidget {
           height: double.infinity,
           child: Checkbox(
             onChanged: (value) {
-              if (onCheckedChange != null) {
-                onCheckedChange!(value);
-              }
+              setState(() {
+                widget.item.isChecked = value!;
+              });
             },
-            value: item.isChecked,
+            value: widget.item.isChecked,
           ),
         ),
-        title: !item.isChecked
+        title: !widget.item.isChecked
             ? TextField(
                 controller: _textController,
                 decoration: _textDecoration,
                 focusNode: _textFieldFocusNode,
                 onChanged: (value) {
-                  if (onTextChanged != null) {
-                    onTextChanged!(value);
-                  }
+                  widget.item.value = value;
                 },
                 style: const TextStyle(
                   color: Colors.white,
@@ -83,9 +90,7 @@ class TodoItemWidget extends StatelessWidget {
                 decoration: _textDecoration,
                 focusNode: _textFieldFocusNode,
                 onChanged: (value) {
-                  if (onTextChanged != null) {
-                    onTextChanged!(value);
-                  }
+                  widget.item.value = value;
                 },
                 style: const TextStyle(
                   color: Colors.white24,
