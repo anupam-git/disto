@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                   _loginState = LoginState.LoggingIn;
                 });
 
-                Future.delayed(Duration(seconds: 2), () {
+                Future.delayed(Duration(milliseconds: 500), () {
                   Navigator.pushNamed(context, PageURL.TodoPageURL);
                 });
               },

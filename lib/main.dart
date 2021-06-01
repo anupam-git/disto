@@ -19,8 +19,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: PageURL.LoginPageURL,
       routes: {
-        PageURL.LoginPageURL: (context) => LoginPage(),
-        PageURL.TodoPageURL: (context) => TodoPage(),
+        PageURL.LoginPageURL: (context) => LoginPage(key: UniqueKey()),
+        PageURL.TodoPageURL: (context) => TodoPage(key: UniqueKey()),
       },
     );
   }
