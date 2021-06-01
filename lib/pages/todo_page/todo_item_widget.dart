@@ -49,7 +49,7 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
       key: Key(widget.item.value),
       background: Container(
         color: Colors.red,
-        padding: EdgeInsets.only(left: 20),
+        padding: EdgeInsets.only(left: 16),
         alignment: Alignment.centerLeft,
         child: Icon(
           Icons.delete_outline,
@@ -62,15 +62,23 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
         }
       },
       child: ListTile(
-        leading: Container(
-          height: double.infinity,
-          child: Checkbox(
-            onChanged: (value) {
-              setState(() {
-                widget.item.isChecked = value!;
-              });
-            },
-            value: widget.item.isChecked,
+        leading: FittedBox(
+          fit: BoxFit.fill,
+          child: Row(
+            children: <Widget>[
+              Icon(
+                Icons.drag_indicator,
+                color: Colors.white38,
+              ),
+              Checkbox(
+                onChanged: (value) {
+                  setState(() {
+                    widget.item.isChecked = value!;
+                  });
+                },
+                value: widget.item.isChecked,
+              ),
+            ],
           ),
         ),
         title: !widget.item.isChecked

@@ -10,18 +10,11 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  late final List<TodoItemDTO> data;
+  final List<TodoItemDTO> data = [];
 
   @override
   void initState() {
     super.initState();
-
-    data = List.generate(
-      10,
-      (index) => new TodoItemDTO(
-        value: index.toString(),
-      ),
-    );
   }
 
   @override
@@ -72,6 +65,7 @@ class _TodoPageState extends State<TodoPage> {
                       // All items created. Create a button to add a todo item
 
                       return ListTile(
+                        key: UniqueKey(),
                         onTap: () {
                           setState(() {
                             data.add(
@@ -79,13 +73,27 @@ class _TodoPageState extends State<TodoPage> {
                             );
                           });
                         },
-                        leading: Padding(
-                          padding: EdgeInsets.only(
-                            left: 12,
-                          ),
-                          child: Icon(
-                            Icons.add_circle_outline,
-                            color: Colors.white70,
+                        leading: FittedBox(
+                          fit: BoxFit.fill,
+                          child: Row(
+                            children: <Widget>[
+                              // Place an invisible icon to reserve space for
+                              // correct alignment with other items
+                              Opacity(
+                                opacity: 0,
+                                child: Icon(
+                                  Icons.drag_indicator,
+                                  color: Colors.white38,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 12),
+                                child: Icon(
+                                  Icons.add_circle_outline,
+                                  color: Colors.white70,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         title: Text(
