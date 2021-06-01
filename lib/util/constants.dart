@@ -1,3 +1,10 @@
 class Constants {
-  static final String param1 = "Value1";
+  static PageURL pageUrl = const PageURL();
+}
+
+class PageURL {
+  const PageURL();
+
+  final login = '/login';
+  final todo = '/todo';
 }

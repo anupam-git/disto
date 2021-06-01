@@ -1,5 +1,5 @@
 import 'package:disto/pages/login_page/login_status_widget.dart';
-import 'package:disto/util/page_url.dart';
+import 'package:disto/util/constants.dart';
 import 'package:flutter/material.dart';
 
 enum LoginState {
@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                 });
 
                 Future.delayed(Duration(milliseconds: 500), () {
-                  Navigator.pushNamed(context, PageURL.TodoPageURL);
+                  Navigator.pushNamed(context, Constants.pageUrl.todo);
                 });
               },
             ),

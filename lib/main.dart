@@ -1,6 +1,6 @@
 import 'package:disto/pages/login_page/login_page.dart';
 import 'package:disto/pages/todo_page/todo_page.dart';
-import 'package:disto/util/page_url.dart';
+import 'package:disto/util/constants.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,10 +17,10 @@ class MyApp extends StatelessWidget {
         unselectedWidgetColor: Colors.white,
         fontFamily: 'Roboto',
       ),
-      initialRoute: PageURL.LoginPageURL,
+      initialRoute: Constants.pageUrl.login,
       routes: {
-        PageURL.LoginPageURL: (context) => LoginPage(key: UniqueKey()),
-        PageURL.TodoPageURL: (context) => TodoPage(key: UniqueKey()),
+        Constants.pageUrl.login: (context) => LoginPage(key: UniqueKey()),
+        Constants.pageUrl.todo: (context) => TodoPage(key: UniqueKey()),
       },
     );
   }

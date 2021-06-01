@@ -14,22 +14,39 @@ class LoginStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (loginState == LoginState.NotLoggedIn) {
       // User not logged in
-      return OutlinedButton(
-        onPressed: onLoginButtonPressed,
-        child: Text('Sign In with GitHub'),
-        style: OutlinedButton.styleFrom(
-          primary: Colors.white,
-          side: BorderSide(
-            color: Colors.white60,
-            width: 2,
+      return Column(
+        children: <Widget>[
+          OutlinedButton(
+            onPressed: onLoginButtonPressed,
+            child: Text('Sign In with GitHub'),
+            style: OutlinedButton.styleFrom(
+              primary: Colors.white,
+              side: BorderSide(
+                color: Colors.white60,
+                width: 2,
+              ),
+              padding: EdgeInsets.only(
+                left: 48,
+                right: 48,
+                top: 12,
+                bottom: 12,
+              ),
+            ),
           ),
-          padding: EdgeInsets.only(
-            left: 48,
-            right: 48,
-            top: 12,
-            bottom: 12,
+          Container(
+            margin: EdgeInsets.only(
+              top: 24,
+            ),
+            child: Text(
+              // 'Continue without remote sync',
+              'Skip',
+              style: const TextStyle(
+                color: Colors.white70,
+                decoration: TextDecoration.underline,
+              ),
+            ),
           ),
-        ),
+        ],
       );
     } else if (loginState == LoginState.LoggingIn ||
         loginState == LoginState.Syncing) {
