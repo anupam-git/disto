@@ -1,13 +1,7 @@
 import 'package:disto/pages/login_page/login_status_widget.dart';
 import 'package:disto/util/constants.dart';
 import 'package:flutter/material.dart';
-
-enum LoginState {
-  NotLoggedIn,
-  LoggingIn,
-  Syncing,
-  SyncComplete,
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key}) : super(key: key);
@@ -81,13 +75,32 @@ class _LoginPageState extends State<LoginPage> {
             ),
             LoginStatusWidget(
               loginState: _loginState,
-              onLoginButtonPressed: () {
+              onLoginButtonPressed: () async {
                 setState(() {
                   _loginState = LoginState.LoggingIn;
                 });
 
+                final prefs = await SharedPreferences.getInstance();
+
+                prefs.setBool(Constants.preferenceField.isLoggedIn, true);
+                prefs.setBool(Constants.preferenceField.shouldSync, true);
+
                 Future.delayed(Duration(milliseconds: 500), () {
                   Navigator.pushNamed(context, Constants.pageUrl.todo);
+                });
+              },
+              onSkipPressed: () async {
+                setState(() {
+                  _loginState = LoginState.LoggingIn;
+                });
+
+                final prefs = await SharedPreferences.getInstance();
+
+                prefs.setBool(Constants.preferenceField.isLoggedIn, true);
+                prefs.setBool(Constants.preferenceField.shouldSync, false);
+
+                Future.delayed(Duration(milliseconds: 500), () {
+                  Navigator.popAndPushNamed(context, Constants.pageUrl.todo);
                 });
               },
             ),

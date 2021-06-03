@@ -1,13 +1,16 @@
 import 'package:disto/pages/login_page/login_page.dart';
+import 'package:disto/util/constants.dart';
 import 'package:flutter/material.dart';
 
 class LoginStatusWidget extends StatelessWidget {
   final LoginState loginState;
   final VoidCallback onLoginButtonPressed;
+  final VoidCallback onSkipPressed;
 
   LoginStatusWidget({
     required this.loginState,
     required this.onLoginButtonPressed,
+    required this.onSkipPressed,
   });
 
   @override
@@ -37,12 +40,15 @@ class LoginStatusWidget extends StatelessWidget {
             margin: EdgeInsets.only(
               top: 24,
             ),
-            child: Text(
+            child: TextButton(
               // 'Continue without remote sync',
-              'Skip',
-              style: const TextStyle(
-                color: Colors.white70,
-                decoration: TextDecoration.underline,
+              child: Text('Skip'),
+              onPressed: () => onSkipPressed(),
+              style: TextButton.styleFrom(
+                textStyle: TextStyle(
+                  color: Colors.white70,
+                  decoration: TextDecoration.underline,
+                ),
               ),
             ),
           ),
