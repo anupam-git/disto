@@ -33,7 +33,9 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    setIsLoggedIn();
+    Future.delayed(Duration(seconds: 1), () {
+      setIsLoggedIn();
+    });
   }
 
   @override
