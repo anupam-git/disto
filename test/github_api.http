@@ -1,0 +1,92 @@
+###
+# GitHub Developer API
+###
+
+####################################################################################################
+
+###
+# GitHub OAuth Authentication API - Device Flow
+# Documentation : https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps#device-flow
+# Error Codes : https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps#error-codes-for-the-device-flow
+###
+
+@oauthBaseUrl = https://github.com/login
+
+
+### Step 1: App requests the device and user verification codes from GitHub
+### Note : Store device code from response to environment
+POST {{oauthBaseUrl}}/device/code
+Content-Type: application/json
+
+{
+  "client_id": "{{clientID}}",
+  "scope": "gist"
+}
+
+
+### Step 2: Prompt the user to enter the user code in a browser
+### Enter the user code here : https://github.com/login/device
+
+
+### Step 3: App polls GitHub to check if the user authorized the device
+### Note : Save response access token to environment
+POST {{oauthBaseUrl}}/oauth/access_token
+Content-Type: application/json
+
+{
+  "client_id": "{{clientID}}",
+  // Enter device code from Step 1 Response
+  "device_code": "{{deviceCode}}",
+  "grant_type": "urn:ietf:params:oauth:grant-type:device_code"
+}
+
+
+####################################################################################################
+
+###
+# GitHub Gist API
+# Documentation : https://docs.github.com/en/rest/reference/gists
+###
+
+@apiBaseUrl = https://api.github.com
+@acceptValue = application/vnd.github.v3+json
+
+### List gists
+GET {{apiBaseUrl}}/gists
+Accept: {{acceptValue}}
+
+{
+  "per_page": 1,
+  "page": 5
+}
+
+
+### Create gist
+POST {{apiBaseUrl}}/gists
+Accept: {{acceptValue}}
+Authorization: token {{accessToken}}
+
+{
+  "description": "Test Description",
+  "public": false,
+  "files": {
+    "myfile.json": {
+      "content": "{\"one\": 1, \"two\": 2}"
+    }
+  }
+}
+
+### Update gist
+PATCH {{apiBaseUrl}}/gists/7714abf50f4f4cd487808907165efebd
+Accept: {{acceptValue}}
+Authorization: token {{accessToken}}
+
+{
+  "files": {
+    "myfile.json": {
+      "content": "{\"three\": 3, \"four\": 4}"
+    }
+  }
+}
+
+####################################################################################################
