@@ -1,0 +1,4 @@
+enum GithubApiType {
+  OAuth,
+  Gist,
+}
