@@ -1,4 +1,4 @@
-import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class OAuthResponseCodesDTO {
   late final String deviceCode;
@@ -7,14 +7,12 @@ class OAuthResponseCodesDTO {
   late final int expiresIn;
   late final int interval;
 
-  OAuthResponseCodesDTO.fromResponse(http.Response response) {
-    var result = Uri(query: response.body).queryParameters;
-
-    deviceCode = result["device_code"].toString();
-    userCode = result["user_code"].toString();
-    verificationUri = Uri.parse(result["verification_uri"].toString());
-    expiresIn = int.parse(result["expires_in"].toString());
-    interval = int.parse(result["interval"].toString());
+  OAuthResponseCodesDTO.fromJson(dynamic obj) {
+    deviceCode = obj["device_code"].toString();
+    userCode = obj["user_code"].toString();
+    verificationUri = Uri.parse(obj["verification_uri"].toString());
+    expiresIn = int.parse(obj["expires_in"].toString());
+    interval = int.parse(obj["interval"].toString());
   }
 
   @override
