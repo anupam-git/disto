@@ -1,25 +1,23 @@
-import 'dart:convert';
-
 import 'package:disto/api/api.dart';
 import 'package:dio/dio.dart';
 import 'package:disto/api/github/github_api_type_enum.dart';
 import 'package:disto/api/github/github_exceptions.dart';
 import 'package:disto/api/github/oauth_response_codes_dto.dart';
 
-class GithubAPI extends Api {
+class GithubApi extends Api {
   final Dio _dioClient;
   final GithubApiType _apiType;
   String? accessToken;
 
-  final _clientID = "aa598098248837980a7e";
+  final _clientID = "aa598098248837980a7e-";
 
-  GithubAPI.oauth()
+  GithubApi.oauth()
       : _dioClient = Dio(BaseOptions(baseUrl: "https://github.com/login/")),
         _apiType = GithubApiType.OAuth {
     _init();
   }
 
-  GithubAPI.gist(this.accessToken)
+  GithubApi.gist(this.accessToken)
       : _dioClient = Dio(BaseOptions(baseUrl: "https://api.github.com/")),
         _apiType = GithubApiType.Gist,
         assert(accessToken != null && accessToken.length > 0) {
@@ -31,7 +29,6 @@ class GithubAPI extends Api {
       InterceptorsWrapper(
         onRequest: _dioRequestInterceptor,
         onResponse: _dioResponseInterceptor,
-        onError: _dioErrorInterceptor,
       ),
     );
   }
@@ -62,19 +59,47 @@ class GithubAPI extends Api {
     // Http response Success
     // Check for API error response
 
-    return handler.next(response);
-  }
+    if (response.data["error"] != null) {
+      switch (response.data["error"]) {
+        case "authorization_pending":
+          throw GHOAuthAuthorizationPendingException(
+              requestOptions: response.requestOptions);
 
-  void _dioErrorInterceptor(
-    DioError e,
-    ErrorInterceptorHandler handler,
-  ) {
-    throw GHException("[Code : ${e.response!.statusCode}] ${e.message}");
+        case "slow_down":
+          throw GHOAuthSlowDownException(
+              requestOptions: response.requestOptions);
+
+        case "expired_token":
+          throw GHOAuthExpiredTokenException(
+              requestOptions: response.requestOptions);
+
+        case "unsupported_grant_type":
+          throw GHOAuthUnsupportedGrantTypeException(
+              requestOptions: response.requestOptions);
+
+        case "incorrect_client_credentials":
+          throw GHOAuthIncorrectCredentialsException(
+              requestOptions: response.requestOptions);
+
+        case "incorrect_device_code":
+          throw GHOAuthIncorrectDeviceCodeException(
+              requestOptions: response.requestOptions);
+
+        case "access_denied":
+          throw GHOAuthAccessDeniedException(
+              requestOptions: response.requestOptions);
+
+        default:
+          throw GHException(requestOptions: response.requestOptions);
+      }
+    }
+
+    return handler.next(response);
   }
 
   void _checkApiType(GithubApiType apiType) {
     if (apiType != _apiType) {
-      throw GHException(
+      throw Exception(
           "Cannot make $_apiType request when initialized with $apiType");
     }
   }
@@ -91,5 +116,20 @@ class GithubAPI extends Api {
     );
 
     return OAuthResponseCodesDTO.fromJson(response.data);
+  }
+
+  Future<Response> getAuthorizationStatus(String deviceCode) async {
+    _checkApiType(GithubApiType.OAuth);
+
+    Response response = await _dioClient.post(
+      "/oauth/access_token",
+      data: {
+        "client_id": _clientID,
+        "device_code": deviceCode,
+        "grant_type": "urn:ietf:params:oauth:grant-type:device_code",
+      },
+    );
+
+    return response;
   }
 }

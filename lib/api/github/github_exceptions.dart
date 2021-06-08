@@ -1,38 +1,126 @@
-class GHException implements Exception {
-  final String message;
+import 'package:dio/dio.dart';
 
-  GHException(this.message);
+class GHException implements DioError {
+  GHException({
+    required this.requestOptions,
+    this.response,
+    this.type = DioErrorType.other,
+    this.error,
+  });
 
   @override
-  String toString() {
-    return "GH Exception : $message";
-  }
+  var error;
+
+  @override
+  RequestOptions requestOptions;
+
+  @override
+  Response? response;
+
+  @override
+  StackTrace? stackTrace;
+
+  @override
+  DioErrorType type;
+
+  @override
+  String get message => (error?.toString() ?? '');
 }
 
 class GHOAuthAuthorizationPendingException extends GHException {
-  GHOAuthAuthorizationPendingException(String message) : super(message);
+  GHOAuthAuthorizationPendingException({
+    required RequestOptions requestOptions,
+    Response? response,
+    DioErrorType type = DioErrorType.other,
+    dynamic error,
+  }) : super(
+          requestOptions: requestOptions,
+          response: response,
+          type: type,
+          error: error,
+        );
 }
 
 class GHOAuthSlowDownException extends GHException {
-  GHOAuthSlowDownException(String message) : super(message);
+  GHOAuthSlowDownException({
+    required RequestOptions requestOptions,
+    Response? response,
+    DioErrorType type = DioErrorType.other,
+    dynamic error,
+  }) : super(
+          requestOptions: requestOptions,
+          response: response,
+          type: type,
+          error: error,
+        );
 }
 
 class GHOAuthExpiredTokenException extends GHException {
-  GHOAuthExpiredTokenException(String message) : super(message);
+  GHOAuthExpiredTokenException({
+    required RequestOptions requestOptions,
+    Response? response,
+    DioErrorType type = DioErrorType.other,
+    dynamic error,
+  }) : super(
+          requestOptions: requestOptions,
+          response: response,
+          type: type,
+          error: error,
+        );
 }
 
 class GHOAuthUnsupportedGrantTypeException extends GHException {
-  GHOAuthUnsupportedGrantTypeException(String message) : super(message);
+  GHOAuthUnsupportedGrantTypeException({
+    required RequestOptions requestOptions,
+    Response? response,
+    DioErrorType type = DioErrorType.other,
+    dynamic error,
+  }) : super(
+          requestOptions: requestOptions,
+          response: response,
+          type: type,
+          error: error,
+        );
 }
 
 class GHOAuthIncorrectCredentialsException extends GHException {
-  GHOAuthIncorrectCredentialsException(String message) : super(message);
+  GHOAuthIncorrectCredentialsException({
+    required RequestOptions requestOptions,
+    Response? response,
+    DioErrorType type = DioErrorType.other,
+    dynamic error,
+  }) : super(
+          requestOptions: requestOptions,
+          response: response,
+          type: type,
+          error: error,
+        );
 }
 
 class GHOAuthIncorrectDeviceCodeException extends GHException {
-  GHOAuthIncorrectDeviceCodeException(String message) : super(message);
+  GHOAuthIncorrectDeviceCodeException({
+    required RequestOptions requestOptions,
+    Response? response,
+    DioErrorType type = DioErrorType.other,
+    dynamic error,
+  }) : super(
+          requestOptions: requestOptions,
+          response: response,
+          type: type,
+          error: error,
+        );
 }
 
 class GHOAuthAccessDeniedException extends GHException {
-  GHOAuthAccessDeniedException(String message) : super(message);
+  GHOAuthAccessDeniedException({
+    required RequestOptions requestOptions,
+    Response? response,
+    DioErrorType type = DioErrorType.other,
+    dynamic error,
+  }) : super(
+          requestOptions: requestOptions,
+          response: response,
+          type: type,
+          error: error,
+        );
 }
