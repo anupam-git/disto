@@ -9,7 +9,7 @@ class GithubApi extends Api {
   final GithubApiType _apiType;
   String? accessToken;
 
-  final _clientID = "aa598098248837980a7e-";
+  final _clientID = "aa598098248837980a7e";
 
   GithubApi.oauth()
       : _dioClient = Dio(BaseOptions(baseUrl: "https://github.com/login/")),
