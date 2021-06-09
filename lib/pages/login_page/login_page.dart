@@ -1,9 +1,13 @@
+import 'package:disto/api/github/github_api.dart';
+import 'package:disto/api/github/oauth_response_codes_dto.dart';
+import 'package:disto/pages/login_page/github_login_status_page.dart';
 import 'package:disto/pages/login_page/login_status_widget.dart';
 import 'package:disto/util/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
+  final _api = GithubApi.oauth();
   LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -80,14 +84,27 @@ class _LoginPageState extends State<LoginPage> {
                   _loginState = LoginState.LoggingIn;
                 });
 
-                final prefs = await SharedPreferences.getInstance();
+                // final prefs = await SharedPreferences.getInstance();
 
-                prefs.setBool(Constants.preferenceField.isLoggedIn, true);
-                prefs.setBool(Constants.preferenceField.shouldSync, true);
+                // prefs.setBool(Constants.preferenceField.isLoggedIn, true);
+                // prefs.setBool(Constants.preferenceField.shouldSync, true);
 
-                Future.delayed(Duration(milliseconds: 500), () {
-                  Navigator.pushNamed(context, Constants.pageUrl.todo);
-                });
+                // Future.delayed(Duration(milliseconds: 500), () {
+                //   Navigator.pushNamed(context, Constants.pageUrl.todo);
+                // });
+
+                OAuthResponseCodesDTO codes = await widget._api.getCodes();
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GithubLoginStatusPage(
+                      userCode: codes.userCode,
+                      deviceCode: codes.deviceCode,
+                      interval: codes.interval,
+                      api: widget._api,
+                    ),
+                  ),
+                );
               },
               onSkipPressed: () async {
                 setState(() {

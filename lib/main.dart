@@ -1,4 +1,5 @@
 import 'package:disto/pages/login_page/login_page.dart';
+import 'package:disto/pages/login_page/github_login_status_page.dart';
 import 'package:disto/pages/splash_page/splash_page.dart';
 import 'package:disto/pages/todo_page/todo_page.dart';
 import 'package:disto/util/constants.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'Disto',
       theme: _theme,
       initialRoute: Constants.pageUrl.splash,
+      // home: OAuthAuthorizePage(key: UniqueKey()),
       routes: _routes,
     );
   }
