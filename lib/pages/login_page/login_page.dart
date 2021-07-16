@@ -1,6 +1,6 @@
 import 'package:disto/api/github/github_api.dart';
 import 'package:disto/api/github/oauth_response_codes_dto.dart';
-import 'package:disto/pages/login_page/github_login_status_page.dart';
+import 'package:disto/pages/login_page/github_auth_dialog.dart';
 import 'package:disto/pages/login_page/login_status_widget.dart';
 import 'package:disto/util/constants.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +77,45 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+            // OutlinedButton(
+            //   onPressed: () async {
+            //     showDialog(
+            //       context: context,
+            //       builder: (context) {
+            //         return GithubAuthDialog(
+            //           key: UniqueKey(),
+            //           userCode: this.userCode,
+            //           deviceCode: this.deviceCode,
+            //         );
+            //       },
+            //     );
+
+            //     OAuthResponseCodesDTO codes = await widget._api.getCodes();
+            //     print('OAuth Codes Generated: ' +
+            //         codes.deviceCode +
+            //         ', ' +
+            //         codes.userCode);
+
+            //     setState(() {
+            //       this.deviceCode = codes.deviceCode;
+            //       this.userCode = codes.userCode;
+            //     });
+            //   },
+            //   child: Text('Sign In with GitHub'),
+            //   style: OutlinedButton.styleFrom(
+            //     primary: Colors.white,
+            //     side: BorderSide(
+            //       color: Colors.white60,
+            //       width: 2,
+            //     ),
+            //     padding: EdgeInsets.only(
+            //       left: 48,
+            //       right: 48,
+            //       top: 12,
+            //       bottom: 12,
+            //     ),
+            //   ),
+            // ),
             LoginStatusWidget(
               loginState: _loginState,
               onLoginButtonPressed: () async {
@@ -94,17 +133,32 @@ class _LoginPageState extends State<LoginPage> {
                 // });
 
                 OAuthResponseCodesDTO codes = await widget._api.getCodes();
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GithubLoginStatusPage(
+                // await Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => GithubLoginStatusPage(
+                //       userCode: codes.userCode,
+                //       deviceCode: codes.deviceCode,
+                //       interval: codes.interval,
+                //       api: widget._api,
+                //     ),
+                //   ),
+                // );
+
+                await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return GithubAuthDialog(
+                      key: UniqueKey(),
                       userCode: codes.userCode,
                       deviceCode: codes.deviceCode,
-                      interval: codes.interval,
-                      api: widget._api,
-                    ),
-                  ),
+                    );
+                  },
                 );
+
+                setState(() {
+                  _loginState = LoginState.NotLoggedIn;
+                });
               },
               onSkipPressed: () async {
                 setState(() {

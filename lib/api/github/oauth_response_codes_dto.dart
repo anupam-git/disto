@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class OAuthResponseCodesDTO {
   late final String deviceCode;
   late final String userCode;

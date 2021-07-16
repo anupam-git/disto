@@ -1,6 +1,9 @@
 class Constants {
   static _PageURL pageUrl = const _PageURL();
   static _PreferenceField preferenceField = const _PreferenceField();
+
+  static const double padding = 20;
+  static const double avatarRadius = 45;
 }
 
 class _PageURL {

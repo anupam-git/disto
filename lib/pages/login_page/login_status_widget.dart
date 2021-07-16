@@ -35,22 +35,6 @@ class LoginStatusWidget extends StatelessWidget {
               ),
             ),
           ),
-          // Container(
-          //   margin: EdgeInsets.only(
-          //     top: 24,
-          //   ),
-          //   child: TextButton(
-          //     // 'Continue without remote sync',
-          //     child: Text('Skip'),
-          //     onPressed: () => onSkipPressed(),
-          //     style: TextButton.styleFrom(
-          //       textStyle: TextStyle(
-          //         color: Colors.white70,
-          //         decoration: TextDecoration.underline,
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       );
     } else if (loginState == LoginState.LoggingIn ||
