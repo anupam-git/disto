@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:disto/api/github/github_api.dart';
 import 'package:disto/api/github/github_exceptions.dart';
+import 'package:disto/api/github/oauth_authorization_status_dto.dart';
 import 'package:disto/api/github/oauth_response_codes_dto.dart';
 import 'package:disto/pages/login_page/github_auth_dialog.dart';
 import 'package:disto/pages/login_page/login_status_widget.dart';
@@ -185,11 +186,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _checkLoginStatus(OAuthResponseCodesDTO codes) async {
-    Response? response;
+    OAuthAuthorizationStatusDTO? authStatus;
     bool success = true;
 
     try {
-      response = await widget._api.getAuthorizationStatus(codes.deviceCode);
+      authStatus = await widget._api.getAuthorizationStatus(codes.deviceCode);
     } on GHOAuthAuthorizationPendingException {
       success = false;
 
@@ -213,13 +214,13 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     if (success) {
-      print(response!.data);
+      print(authStatus.toString());
 
       final prefs = await SharedPreferences.getInstance();
       prefs.setBool(Constants.preferenceField.isLoggedIn, true);
       prefs.setString(
         Constants.preferenceField.accessToken,
-        response.data['access_token'],
+        authStatus!.accessToken,
       );
 
       // Dismiss dialog

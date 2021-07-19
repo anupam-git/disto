@@ -2,6 +2,7 @@ import 'package:disto/api/api.dart';
 import 'package:dio/dio.dart';
 import 'package:disto/api/github/github_api_type_enum.dart';
 import 'package:disto/api/github/github_exceptions.dart';
+import 'package:disto/api/github/oauth_authorization_status_dto.dart';
 import 'package:disto/api/github/oauth_response_codes_dto.dart';
 
 class GithubApi extends Api {
@@ -118,7 +119,8 @@ class GithubApi extends Api {
     return OAuthResponseCodesDTO.fromJson(response.data);
   }
 
-  Future<Response> getAuthorizationStatus(String deviceCode) async {
+  Future<OAuthAuthorizationStatusDTO> getAuthorizationStatus(
+      String deviceCode) async {
     _checkApiType(GithubApiType.OAuth);
 
     Response response = await _dioClient.post(
@@ -130,6 +132,6 @@ class GithubApi extends Api {
       },
     );
 
-    return response;
+    return OAuthAuthorizationStatusDTO.fromJson(response.data);
   }
 }
