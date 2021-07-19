@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class TodoItemWidget extends StatefulWidget {
   final TodoItemDTO item;
   final Function(DismissDirection)? onDismissed;
+  final Function(String)? onTextChanged;
 
   TodoItemWidget({
     Key? key,
     required this.item,
     this.onDismissed,
+    this.onTextChanged,
   }) : super(key: key);
 
   @override
@@ -88,6 +90,7 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
                 focusNode: _textFieldFocusNode,
                 onChanged: (value) {
                   widget.item.value = value;
+                  widget.onTextChanged!(value);
                 },
                 style: const TextStyle(
                   color: Colors.white,
@@ -99,6 +102,7 @@ class _TodoItemWidgetState extends State<TodoItemWidget> {
                 focusNode: _textFieldFocusNode,
                 onChanged: (value) {
                   widget.item.value = value;
+                  widget.onTextChanged!(value);
                 },
                 style: const TextStyle(
                   color: Colors.white24,

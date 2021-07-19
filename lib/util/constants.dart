@@ -19,6 +19,7 @@ class _PreferenceField {
 
   final isLoggedIn = "IS_LOGGED_IN";
   final accessToken = "ACCESS_TOKEN";
+  final todos = "TODOS";
 }
 
 enum LoginState {

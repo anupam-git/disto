@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:disto/pages/todo_page/todo_item_dto.dart';
 import 'package:disto/pages/todo_page/todo_item_widget.dart';
+import 'package:disto/util/constants.dart';
+import 'package:disto/util/todo_store.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoPage extends StatefulWidget {
   TodoPage({Key? key}) : super(key: key);
@@ -10,11 +15,26 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  final List<TodoItemDTO> data = [];
+  TodoStore _todoStore = new TodoStore([]);
 
   @override
   void initState() {
     super.initState();
+    _initTodoStore();
+  }
+
+  void _initTodoStore() async {
+    var prefs = await SharedPreferences.getInstance();
+
+    try {
+      var json = jsonDecode(prefs.getString(Constants.preferenceField.todos)!);
+      setState(() {
+        _todoStore = TodoStore(List<TodoItemDTO>.from(
+            json["todos"].map((e) => TodoItemDTO.fromJson(e))));
+      });
+    } catch (e) {
+      // No todos saved in storage
+    }
   }
 
   @override
@@ -58,17 +78,17 @@ class _TodoPageState extends State<TodoPage> {
               Flexible(
                 child: ListView.builder(
                   // itemCount is 1 more than length to render the "Add Item" at bottom
-                  itemCount: data.length + 1,
+                  itemCount: _todoStore.length() + 1,
 
                   itemBuilder: (context, index) {
-                    if (index == data.length) {
+                    if (index == _todoStore.length()) {
                       // All items created. Create a button to add a todo item
 
                       return ListTile(
                         key: UniqueKey(),
                         onTap: () {
                           setState(() {
-                            data.add(
+                            _todoStore.addTodo(
                               new TodoItemDTO(requestFocus: true),
                             );
                           });
@@ -104,18 +124,21 @@ class _TodoPageState extends State<TodoPage> {
                         ),
                       );
                     } else {
+                      var todo = _todoStore.getTodo(index);
+
                       return TodoItemWidget(
                         key: UniqueKey(),
-                        item: data[index],
+                        item: todo,
                         onDismissed: (direction) {
                           debugPrint(
-                            'onDismissed: $index -> ${data[index].value}',
+                            'onDismissed: $index -> ${todo.value}',
                           );
 
                           setState(() {
-                            TodoItemDTO removedItem = data.removeAt(index);
+                            TodoItemDTO removedItem =
+                                _todoStore.removeTodo(index);
 
-                            debugPrint(data.toString());
+                            debugPrint(_todoStore.toString());
 
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
@@ -124,6 +147,9 @@ class _TodoPageState extends State<TodoPage> {
                               ),
                             );
                           });
+                        },
+                        onTextChanged: (value) {
+                          _todoStore.writeTodos();
                         },
                       );
                     }
