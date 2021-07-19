@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:disto/api/github/github_api.dart';
+import 'package:disto/api/github/github_exceptions.dart';
 import 'package:disto/api/github/oauth_response_codes_dto.dart';
 import 'package:disto/pages/login_page/github_auth_dialog.dart';
 import 'package:disto/pages/login_page/login_status_widget.dart';
@@ -145,20 +147,22 @@ class _LoginPageState extends State<LoginPage> {
                 //   ),
                 // );
 
-                await showDialog(
+                showDialog(
                   context: context,
+                  barrierDismissible: false,
                   builder: (context) {
-                    return GithubAuthDialog(
-                      key: UniqueKey(),
-                      userCode: codes.userCode,
-                      deviceCode: codes.deviceCode,
+                    return WillPopScope(
+                      onWillPop: () async => false,
+                      child: GithubAuthDialog(
+                        key: UniqueKey(),
+                        userCode: codes.userCode,
+                        deviceCode: codes.deviceCode,
+                      ),
                     );
                   },
                 );
 
-                setState(() {
-                  _loginState = LoginState.NotLoggedIn;
-                });
+                this._checkLoginStatus(codes);
               },
               onSkipPressed: () async {
                 setState(() {
@@ -168,7 +172,6 @@ class _LoginPageState extends State<LoginPage> {
                 final prefs = await SharedPreferences.getInstance();
 
                 prefs.setBool(Constants.preferenceField.isLoggedIn, true);
-                prefs.setBool(Constants.preferenceField.shouldSync, false);
 
                 Future.delayed(Duration(milliseconds: 500), () {
                   Navigator.popAndPushNamed(context, Constants.pageUrl.todo);
@@ -179,5 +182,67 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _checkLoginStatus(OAuthResponseCodesDTO codes) async {
+    Response? response;
+    bool success = true;
+
+    try {
+      response = await widget._api.getAuthorizationStatus(codes.deviceCode);
+    } on GHOAuthAuthorizationPendingException {
+      success = false;
+
+      Future.delayed(
+        Duration(seconds: codes.interval + 1),
+        () => this._checkLoginStatus(codes),
+      );
+    } catch (e) {
+      success = false;
+
+      // Dismiss dialog
+      Navigator.pop(context);
+
+      setState(() {
+        _loginState = LoginState.NotLoggedIn;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Authentication Error. Please try again.'),
+      ));
+    }
+
+    if (success) {
+      print(response!.data);
+
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setBool(Constants.preferenceField.isLoggedIn, true);
+      prefs.setString(
+        Constants.preferenceField.accessToken,
+        response.data['access_token'],
+      );
+
+      // Dismiss dialog
+      Navigator.pop(context);
+
+      setState(() {
+        _loginState = LoginState.Syncing;
+      });
+
+      Future.delayed(
+        Duration(milliseconds: 500),
+        () => this._syncTodos(),
+      );
+    }
+  }
+
+  void _syncTodos() {
+    setState(() {
+      _loginState = LoginState.SyncComplete;
+    });
+
+    Future.delayed(Duration(milliseconds: 500), () {
+      Navigator.pushReplacementNamed(context, Constants.pageUrl.todo);
+    });
   }
 }

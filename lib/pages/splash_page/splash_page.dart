@@ -12,7 +12,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   bool isLoggedIn = false;
 
-  void setIsLoggedIn() async {
+  void _checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     isLoggedIn = prefs.getBool(Constants.preferenceField.isLoggedIn) ?? false;
 
@@ -34,7 +34,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
 
     Future.delayed(Duration(seconds: 1), () {
-      setIsLoggedIn();
+      _checkLoginStatus();
     });
   }
 

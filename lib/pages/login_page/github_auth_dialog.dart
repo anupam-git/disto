@@ -31,7 +31,7 @@ class GithubAuthDialog extends StatelessWidget {
               left: Constants.padding,
               top: Constants.avatarRadius + Constants.padding,
               right: Constants.padding,
-              bottom: Constants.padding,
+              bottom: 8,
             ),
             margin: EdgeInsets.only(top: Constants.avatarRadius),
             decoration: BoxDecoration(

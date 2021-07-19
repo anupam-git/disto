@@ -18,7 +18,7 @@ class _PreferenceField {
   const _PreferenceField();
 
   final isLoggedIn = "IS_LOGGED_IN";
-  final shouldSync = "SHOULD_SYNC";
+  final accessToken = "ACCESS_TOKEN";
 }
 
 enum LoginState {
