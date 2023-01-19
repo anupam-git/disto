@@ -134,4 +134,12 @@ class GithubApi extends Api {
 
     return OAuthAuthorizationStatusDTO.fromJson(response.data);
   }
+
+  Future<Response> getPrivateGists() async {
+    _checkApiType(GithubApiType.Gist);
+
+    Response response = await _dioClient.post("/gists");
+
+    return response;
+  }
 }

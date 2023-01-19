@@ -1,13 +1,17 @@
 import 'dart:convert';
 
+import 'package:disto/api/github/github_api.dart';
 import 'package:disto/pages/todo_page/todo_item_dto.dart';
 import 'package:disto/util/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TodoStore {
-  late List<TodoItemDTO> _todos;
+  late final List<TodoItemDTO> _todos;
+  final SharedPreferences _prefs;
 
-  TodoStore(List<TodoItemDTO> todos) {
+  TodoStore(GithubApi api, this._prefs, this._todos);
+
+  void setTodos(List<TodoItemDTO> todos) {
     _todos = todos;
   }
 
@@ -28,8 +32,7 @@ class TodoStore {
   }
 
   void writeTodos() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(
+    _prefs.setString(
       Constants.preferenceField.todos,
       jsonEncode({
         'todos': this._todos,

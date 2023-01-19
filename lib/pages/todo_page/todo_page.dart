@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:disto/api/github/github_api.dart';
 import 'package:disto/pages/todo_page/todo_item_dto.dart';
 import 'package:disto/pages/todo_page/todo_item_widget.dart';
 import 'package:disto/util/constants.dart';
@@ -15,7 +16,8 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  TodoStore _todoStore = new TodoStore([]);
+  late GithubApi _api;
+  late TodoStore _todoStore;
 
   @override
   void initState() {
@@ -25,12 +27,18 @@ class _TodoPageState extends State<TodoPage> {
 
   void _initTodoStore() async {
     var prefs = await SharedPreferences.getInstance();
+    _api =
+        GithubApi.gist(prefs.getString(Constants.preferenceField.accessToken));
+    _todoStore = new TodoStore(_api, prefs, []);
 
     try {
       var json = jsonDecode(prefs.getString(Constants.preferenceField.todos)!);
       setState(() {
-        _todoStore = TodoStore(List<TodoItemDTO>.from(
-            json["todos"].map((e) => TodoItemDTO.fromJson(e))));
+        _todoStore.setTodos(
+          List<TodoItemDTO>.from(
+            json["todos"].map((e) => TodoItemDTO.fromJson(e)),
+          ),
+        );
       });
     } catch (e) {
       // No todos saved in storage
